@@ -1,0 +1,110 @@
+[
+    {
+        "id": 1,
+        "type": "happy_path_english",
+        "input": "Hi, I received my order today but the stroller arrived completely damaged. The frame is bent and one wheel is broken. I paid 450 AED for this and I want a full refund immediately.",
+        "expected_intent": "refund",
+        "expected_urgency": "high",
+        "expected_out_of_scope": false,
+        "note": "Clear refund request with high value item — model should be confident"
+    },
+    {
+        "id": 2,
+        "type": "happy_path_arabic",
+        "input": "السلام عليكم، وصلتني الملابس بس المقاس غلط، طلبت مقاس 6 أشهر وجاءني مقاس 12 شهر. أبي أستبدلها بالمقاس الصح.",
+        "expected_intent": "exchange",
+        "expected_urgency": "low",
+        "expected_out_of_scope": false,
+        "note": "Simple Arabic exchange request — wrong size clothes, low urgency"
+    },
+    {
+        "id": 3,
+        "type": "out_of_scope_unrelated",
+        "input": "Hi, can you recommend a good restaurant near Dubai Mall? Looking for something family friendly.",
+        "expected_intent": "other",
+        "expected_urgency": "low",
+        "expected_out_of_scope": true,
+        "note": "Completely unrelated to Mumzworld — model must return null replies"
+    },
+    {
+        "id": 4,
+        "type": "adversarial_too_vague",
+        "input": "I'm not happy.",
+        "expected_intent": "escalate",
+        "expected_urgency": "medium",
+        "expected_out_of_scope": false,
+        "note": "Too vague to classify confidently — model should escalate or return low confidence"
+    },
+    {
+        "id": 5,
+        "type": "adversarial_mixed_language",
+        "input": "Hello, أين طلبي؟ I placed the order 2 weeks ago and the tracking still says in transit. This is unacceptable.",
+        "expected_intent": "escalate",
+        "expected_urgency": "high",
+        "expected_out_of_scope": false,
+        "note": "Code-switching between English and Arabic — common in GCC customers"
+    },
+    {
+        "id": 6,
+        "type": "adversarial_emotionally_distressed",
+        "input": "My baby is 3 weeks old and I ordered baby formula and diapers 5 days ago. Nothing has arrived. The tracking number doesn't work. My baby needs these NOW. I am going to report you to consumer protection if this is not resolved today.",
+        "expected_intent": "escalate",
+        "expected_urgency": "high",
+        "expected_out_of_scope": false,
+        "note": "Newborn essential items delayed — highest urgency, must escalate to human agent"
+    },
+    {
+        "id": 7,
+        "type": "happy_path_store_credit",
+        "input": "Hello, I returned a product last week and I was told I would get a refund. But actually I changed my mind — I would prefer store credit instead so I can use it toward my next purchase.",
+        "expected_intent": "store_credit",
+        "expected_urgency": "low",
+        "expected_out_of_scope": false,
+        "note": "Explicit store credit preference — must not be classified as refund"
+    },
+    {
+        "id": 8,
+        "type": "out_of_scope_spam",
+        "input": "CONGRATULATIONS!!! You have been selected to WIN a FREE iPhone 15 Pro!!! CLICK HERE NOW >>> bit.ly/win-free-phone LIMITED TIME OFFER!!!",
+        "expected_intent": "other",
+        "expected_urgency": "low",
+        "expected_out_of_scope": true,
+        "note": "Obvious spam — model must flag out_of_scope and return null replies"
+    },
+    {
+        "id": 9,
+        "type": "adversarial_polite_arabic_but_urgent",
+        "input": "السلام عليكم ورحمة الله وبركاته، أرجو المعذرة على الإزعاج. طلبيتي رقم لم تصل من ثلاثة أسابيع، وعندي طفل رضيع محتاج للحفاضات والحليب. أنا متفهم إن في ضغط على الشحن لكن أتمنى المساعدة.",
+        "expected_intent": "escalate",
+        "expected_urgency": "high",
+        "expected_out_of_scope": false,
+        "note": "CRITICAL: Very polite Arabic tone but extreme urgency. Model must detect urgency from content, not tone. A common failure mode."
+    },
+    {
+        "id": 10,
+        "type": "happy_path_exchange_english",
+        "input": "Hi, I bought Aptamil formula stage 1 last week but my doctor just told me my baby needs stage 2. The tin is still sealed and unopened. Can I exchange it for stage 2?",
+        "expected_intent": "exchange",
+        "expected_urgency": "low",
+        "expected_out_of_scope": false,
+        "note": "Clear exchange request with valid reason — unopened product, medical reason"
+    },
+    {
+        "id": 11,
+        "type": "adversarial_ambiguous_refund_or_escalate",
+        "input": "I want my money back. You know what you did.",
+        "expected_intent": "escalate",
+        "expected_urgency": "medium",
+        "expected_out_of_scope": false,
+        "note": "Implies a refund but no context — confidence should be low, should escalate"
+    },
+    {
+        "id": 12,
+        "type": "adversarial_out_of_scope_competitor",
+        "input": "Hi, I bought a product from Noon.com and I want to return it. Can you help me with the return process?",
+        "expected_intent": "other",
+        "expected_urgency": "low",
+        "expected_out_of_scope": true,
+        "note": "Asking about a competitor platform — Mumzworld cannot handle this, must be out of scope"
+    }
+]

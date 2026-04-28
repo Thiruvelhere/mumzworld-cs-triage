@@ -15,7 +15,7 @@ print(f"{'ID':<4} {'Type':<40} {'Expected':<15} {'Got':<15} {'Pass?'}")
 print('-' * 85)
 
 for case in cases:
-    time.sleep(8)  # wait 3 seconds between calls to avoid rate limit
+    time.sleep(20)  # wait 3 seconds between calls to avoid rate limit
     result = triage_email(case['input'])
     if result.get('validation_failed'):
         got_intent = 'SCHEMA_ERROR'

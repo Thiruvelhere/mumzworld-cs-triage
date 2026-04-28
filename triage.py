@@ -39,7 +39,6 @@ def triage_email(email_text: str) -> dict:
         return {'error': 'All attempts failed', 'validation_failed': True}
 
     raw = response.choices[0].message.content
-    print(f"DEBUG RAW: {raw[:200]}")
 
     # strip markdown code fences if model wraps JSON in ```json ... ```
     if '```' in raw:

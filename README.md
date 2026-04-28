@@ -1,4 +1,4 @@
-# Mumzworld CS Email Triage — AI Engineering Intern Submission
+# Mumzworld CS Email Triage — AI Native Intern Submission
 
 **Track A | Thiruvel | April 29, 2025**
 

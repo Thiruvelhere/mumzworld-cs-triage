@@ -10,6 +10,30 @@
 
 Mumzworld's #1 verified complaint across 300+ customer reviews is poor customer service — slow responses, inconsistent answers, and agents giving wrong information. This system sits in front of the CS queue and automatically triages every incoming email: classifying intent (refund, exchange, store_credit, escalate, other), scoring urgency (low, medium, high), generating a draft reply in both English and natural Gulf Arabic, and flagging emails that are out of scope with null replies instead of hallucinated answers. Every output is validated against a Pydantic schema — failures are explicit, never silent.
 
+> **Problem selection evidence:** See [RESEARCH.md](./RESEARCH.md) — 300+ customer reviews across Sitejabber, Trustpilot, Google Play, and App Store were reviewed before writing a single line of code to verify this is the highest-leverage problem to solve.
+
+---
+
+## Live example output
+
+**Input:**
+> "hello i got a oversized diaper for my baby, i want to return and need a refund"
+
+**Output:**
+
+| Field | Value |
+|---|---|
+| Intent | REFUND |
+| Urgency | MEDIUM |
+| Confidence | 92% |
+| Reasoning | Customer is requesting a return due to incorrect size of product |
+
+**Draft Reply — English:**
+> We're happy to help you with the return process. Please contact our customer service team via phone/email to initiate the return and we'll guide you through the next steps for a full refund or exchange.
+
+**Draft Reply — Arabic:**
+> أهلاً، نرغب في مساعدتك في إجراء استرجاع المنتج. ممكن تراسلنا عبر الهاتف/البريد الإلكتروني لبدء عملية الاسترجاع، ونحن سنقوم بمراجعة الخطوات التالية معك.
+
 ---
 
 ## Setup and run (under 5 minutes)
@@ -27,7 +51,7 @@ pip install -r requirements.txt
 # 3. Pull the local model (one time only, ~5GB)
 ollama pull llama3.1:8b
 
-# 4. Start Ollama in a separate terminal
+# 4. Start Ollama in a separate terminal and keep it running
 ollama serve
 
 # 5. Copy env file (no API key needed — runs fully locally)
@@ -90,7 +114,7 @@ The pipeline is deliberately linear with no retries or agent loops. If the model
 
 **What I rejected:**
 
-- **OpenRouter free tier** — Llama 3.3 70B is the ideal model but rate-limits aggressively during peak hours. In production with a paid key this is a non-issue — same code, just swap the base_url and key.
+- **OpenRouter free tier** — Llama 3.3 70B is the ideal model but rate-limits aggressively during peak hours. In production with a paid key this is a non-issue — same code, swap base_url and key.
 - **LangChain** — unnecessary abstraction for a single-step linear pipeline
 - **Fine-tuning** — no labeled Mumzworld CS data exists; few-shot is the right tool at this stage
 - **Agent loops** — email triage is a single classification + generation task, not multi-step reasoning
@@ -101,23 +125,23 @@ The pipeline is deliberately linear with no retries or agent loops. If the model
 
 Full rubric and scores in [evals/EVALS.md](./evals/EVALS.md).
 
-**Score: 10/12**
+**Score: 10/12 (83%)**
 
 | Category | Cases | Pass |
 |---|---|---|
 | Happy path English | 3 | 3/3 |
 | Happy path Arabic | 2 | 2/2 |
-| Out of scope | 2 | 2/2 |
-| Adversarial / urgent | 3 | 3/3 |
+| Out of scope | 3 | 3/3 |
+| Adversarial urgent | 2 | 2/2 |
 | Adversarial ambiguous | 2 | 0/2 |
 
 **Known failures:**
 
-**Case 4 — "I'm not happy"**
-Model classifies as `other` instead of `escalate`. Genuinely ambiguous — no actionable information. A human agent would also struggle. I chose not to over-engineer the prompt to force a pass on this single edge case as doing so would hurt performance on real emails. Correct behaviour is escalate with low confidence.
+**Case 4 — "I'm not happy."**
+Model classifies as `other` instead of `escalate`. Genuinely ambiguous — no actionable information. A human agent would also struggle. The correct fix is CRM context injection, not prompt hacking.
 
 **Case 11 — "I want my money back. You know what you did."**
-Model classifies as `other` instead of `escalate`. The phrase implies prior context the model doesn't have. Without order details, it treats it as out of scope. In production, order history from the CRM would be injected into the prompt, solving this completely.
+Model classifies as `other` instead of `escalate`. The phrase implies prior context the model doesn't have. In production, order history from the CRM injected into the prompt would solve this completely.
 
 ---
 
@@ -138,12 +162,11 @@ The model never invents order numbers, product names, or dates not in the email.
 - **Order lookup via CRM API** — requires Mumzworld system access; mocked in evals instead
 - **Sentiment scoring** — intent + urgency already captures this; redundant field
 - **Multi-turn conversation** — the brief asked for email triage, not a chat agent
-- **Retry logic** — local Ollama doesn't fail, so not needed in this setup
 
 **What I would build next:**
 - Feedback loop — agents mark replies as "used" or "edited", that data becomes training signal
-- Confidence calibration — 0.5 threshold should be tuned on real labeled data
-- CRM integration — inject order history into prompt to handle ambiguous "you know what you did" cases
+- Confidence calibration — 0.5 threshold tuned on real labeled data
+- CRM integration — inject order history into prompt context
 - Swap to Claude Haiku or GPT-4o-mini in production — same architecture, change 2 lines
 
 ---
@@ -183,6 +206,14 @@ The architecture, schema, prompt, and eval harness are all production-ready. The
 
 ---
 
+## Further reading
+
+- [RESEARCH.md](./RESEARCH.md) — Evidence from 300+ customer reviews that grounded the problem selection
+- [evals/EVALS.md](./evals/EVALS.md) — Full rubric, all 12 test cases, honest failure analysis
+- [prompts.py](./prompts.py) — System prompt and few-shot examples
+
+---
+
 ## Time log
 
 | Phase | Time spent |
@@ -193,7 +224,7 @@ The architecture, schema, prompt, and eval harness are all production-ready. The
 | app.py Streamlit UI | 30 min |
 | Debugging (imports, encoding, rate limits, Ollama setup) | 90 min |
 | Eval cases + run_evals.py | 45 min |
-| README + EVALS.md | 45 min |
+| README + EVALS.md + RESEARCH.md | 45 min |
 | Loom recording | 15 min |
 | **Total** | **~6 hours** |
 

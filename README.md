@@ -1,6 +1,6 @@
-# Mumzworld CS Email Triage — AI Engineering Intern Submission
+# Mumzworld CS Email Triage — AI Native Intern Submission
 
-**Track A | Thiruvel | April 29, 2025**
+**Track B | Thiruvel | April 29, 2025**
 
 > An AI-powered customer service triage system for Mumzworld. Paste any customer email in English or Arabic — the system classifies intent, scores urgency, generates a bilingual draft reply in English and Gulf Arabic, and explicitly refuses to answer when the email is out of scope.
 
@@ -13,7 +13,8 @@ Mumzworld's #1 verified complaint across 300+ customer reviews is poor customer 
 > **Problem selection evidence:** See [RESEARCH.md](./RESEARCH.md) — 300+ customer reviews across Sitejabber, Trustpilot, Google Play, and App Store were reviewed before writing a single line of code to verify this is the highest-leverage problem to solve.
 
 ---
-
+## Walkthrough
+🎥 [3-minute Loom demo](https://www.loom.com/share/a1b54bbfa6a249fd9e82d8e6019602e7)
 ## Live example output
 
 **Input:**

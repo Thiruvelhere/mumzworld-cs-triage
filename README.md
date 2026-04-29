@@ -1,4 +1,4 @@
-# Mumzworld CS Email Triage — AI Native Intern Submission
+# Mumzworld CS Email Triage — AI Engineering Intern Submission
 
 **Track A | Thiruvel | April 29, 2025**
 
@@ -203,4 +203,4 @@ Went one hour over. Extra time went into Windows-specific debugging (Arabic enco
 
 ## AI usage note
 
-Used Ollama (llama3.1:8b) for local inference. Used Claude for prompt iteration, Arabic tone QA, and debugging assistance. Core application logic, schema design, eval cases, and final implementation decisions were authored and reviewed by me.
+Ollama + llama3.1:8b for all inference (local, free, no API key required). Claude (claude.ai) for Arabic QA, prompt iteration, and pair debugging. All core code written and understood by me. System prompt and few-shot examples authored and iterated by me, committed to repo.
